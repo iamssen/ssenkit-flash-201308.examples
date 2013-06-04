@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:date="ssen.common.date.*"
+					   xmlns:devkit="ssen.devkit.*" width="800" height="600">
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" gap="10" horizontalAlign="left"
+						  verticalAlign="top"/>
+	</s:layout>
+	
+	<devkit:ExampleExecuter exampleClass="ssen.common.date.Day__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.DataConverter__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Queue__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Stack__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Deque__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Heap__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Array2__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Map__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.Tree__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.LinkedList__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.ObjectPool__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.LinkedObjectPool__Example"/>
+	<devkit:ExampleExecuter exampleClass="ssen.common.ds.polygonal.CompareStructures__Example"/>
+</s:WindowedApplication>

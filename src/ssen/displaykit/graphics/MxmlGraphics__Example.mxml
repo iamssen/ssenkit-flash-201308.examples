@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<devkit:ExampleCanvas xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:devkit="ssen.devkit.*">
+	<fx:Script>
+		<![CDATA[
+			[Test]
+			public function mxmlTransitionWithState():void {
+				clear();
+				
+				stage.frameRate=60;
+				
+				var t:MxmlTransitionWithState=new MxmlTransitionWithState;
+				t.width=700;
+				t.height=500;
+				t.x=50;
+				t.y=50;
+				addElement(t);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component className="MxmlTransitionWithState">
+			<s:Group>
+				<fx:Declarations>
+					<!-- easing -->
+					<s:Power id="pow" easeInFraction="0.3"/>
+					<!-- effect 선언. 필요하다면 mxml 화 시켜서 모듈화도 가능 -->
+					<s:Parallel id="pa">
+						<s:Resize duration="1000" target="{rect}" easer="{pow}"/>
+						<s:Move duration="1000" target="{rect}" easer="{pow}"/>
+					</s:Parallel>
+				</fx:Declarations>
+
+				<!-- state 선언 -->
+				<s:states>
+					<s:State name="state1"/>
+					<s:State name="state2"/>
+					<s:State name="state3"/>
+				</s:states>
+
+				<!-- transition 선언 -->
+				<s:transitions>
+					<s:Transition fromState="*" toState="*" effect="{pa}"/>
+				</s:transitions>
+
+				<!-- state 를 가진 rect -->
+				<s:Rect id="rect" width.state1="100" width.state2="200" width.state3="50" height.state1="100" height.state2="200"
+						height.state3="50" x.state1="100" x.state2="300" x.state3="500" y.state1="100" y.state2="200" y.state3="140">
+					<s:fill>
+						<s:SolidColor color="0x000000"/>
+					</s:fill>
+				</s:Rect>
+
+				<!-- state 변경 -->
+				<s:Button x="10" y="10" label="state1" click="currentState='state1'"/>
+				<s:Button x="88" y="10" label="state2" click="currentState='state2'"/>
+				<s:Button x="166" y="10" label="state3" click="currentState='state3'"/>
+			</s:Group>
+		</fx:Component>
+	</fx:Declarations>
+
+</devkit:ExampleCanvas>

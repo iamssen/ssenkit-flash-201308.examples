@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<devkit:ExampleCanvas xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:devkit="ssen.devkit.*"
+					  xmlns:form="ssen.displaykit.form.*">
+	<fx:Script>
+		<![CDATA[
+			[Test]
+			public function testBasic():void {
+				clear();
+				
+				var t:BasicTest=new BasicTest;
+				t.x=10;
+				t.y=10;
+				addElement(t);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component className="BasicTest">
+			<s:Group initialize="init()">
+				<fx:Script>
+					<![CDATA[
+						import mx.collections.ArrayList;
+						import mx.collections.IList;
+						import mx.events.ValidationResultEvent;
+						import mx.validators.StringValidator;
+						
+						import spark.validators.NumberValidator;
+						
+						private var c1:TextInputControl;
+						private var c2:TextInputControl;
+						private var c3:TextInputControl;
+						private var c4:TextInputControl;
+						private var c5:DropDownListControl;
+						private var c6:ComboBoxControl;
+						private var c7:NumericStepperControl;
+						private var b1:ButtonControl;
+						
+						private var v1:NumberValidator;
+						private var v2:StringValidator;
+						private var v3:NumberValidator;
+						private var v4:StringValidator;
+						
+						private function init():void {
+							/*
+							   필요한 테스트
+							
+							   1. 아래 form 들을 group 에 넣어서 enabled / disabled 변경 시에 start / stop 을 연동해보기
+							   - stop 시에 disabled 효과가 있어야 한다.
+							   - stop 시에 errorString 등의 효력이 사라져야 한다. 이를 위해서는 control 이 상태를 가지고 있어야 한다
+							
+							   2. 추가적으로 필요한 컨트롤들
+							   - 추가 input control ???  >>  validator 와 restrict 조합으로 처리한다
+							   - input control 에 formatter 기능 넣기 ( focus in / out 에 따른 formatting )
+							
+							   - input
+							   - TextInput
+							   - place holder (입력 전 써져 있는 글씨들)
+							   - TextArea
+							   - Password
+							   - choose
+							   - -RadioButton Group-
+							   - 별로 복잡해만 지고, 의미가 없다.
+							   - Tile 형태의 List 를 개조해서 dataProvider 에 의해 움직이게 하자
+							   - -CheckBox Group ( 화살표 이동 + 스페이스바 체크 ??? )-
+							   - 역시나 Tile 형태의 List 를 개조해서 사용하는게 더 좋을듯 싶다
+							   - RadioButton Group 형태와 공용화 시키자
+							   - -ComboBox (Text Input 형태의 validate, restrict 처리도 필요한 것 같다)-
+							   - -DropDownList (errorString 이 들어갈 여지가 크게 없을듯...)-
+							   - DateField (Text Input 형태의 validate, restirct 처리도 필요)
+							   - -NumbericStepper-
+							   - ListBase CheckList
+							
+							
+							   필요한 추가 컴포넌트들
+							   - List Base CheckList (RadioButton And CheckBox)
+							   - DataAndTimeChooser (DateField + Time Comboboxes : AM/PM, H, M)
+							   - Anchor Button 에 대해서 좀 더 정확히 알아야 한다
+							   - Desktop Mode 에서는 Anchor 형태로 작동
+							   - Mobile Mode 에서는 Popup 형태로 작동
+							   - Elastic Data Grid
+							
+							   그리고... 컨테이너 프레임워크를 만들어보자
+							
+							   그 다음에 Elastic Data Grid
+							 */
+							
+							//---------------------------------------
+							// validators
+							//---------------------------------------
+							var result:ValidationResultEvent;
+							
+							v1=new NumberValidator;
+							v1.minValue=100;
+							v1.maxValue=200;
+							
+							v2=new StringValidator;
+							v2.minLength=3;
+							v2.maxLength=6;
+							
+							v3=new NumberValidator;
+							v3.minValue=500;
+							v3.maxValue=1000;
+							
+							v4=new StringValidator;
+							v4.minLength=5;
+							v4.maxLength=10;
+							
+							
+							//---------------------------------------
+							// controls
+							//---------------------------------------
+							// construct
+							c1=new TextInputControl(t1);
+							c2=new TextInputControl(t2);
+							c3=new TextInputControl(t3);
+							c4=new TextInputControl(t4);
+							c5=new DropDownListControl(t5);
+							c6=new ComboBoxControl(t6);
+							c7=new NumericStepperControl(t7);
+							b1=new ButtonControl(submit);
+							
+							// 전용 설정
+							c1.restrict="0-9";
+							c1.maxChars=3;
+							c2.maxChars=6;
+							c3.restrict="0-9";
+							c3.maxChars=4;
+							c4.maxChars=10;
+							c6.restrict="a-d";
+							c6.maxChars=2;
+							c7.minimum=20;
+							c7.maximum=50;
+							c7.maxChars=2;
+							
+							// 초기 상태 설정
+							c3.enabled=false;
+							c4.enabled=false;
+							c5.enabled=false;
+							c6.enabled=false;
+							c7.enabled=false;
+							b1.enabled=false;
+							
+							// 탭 설정
+							c1.prevTabControl=b1;
+							c1.nextTabControl=c2;
+							c2.prevTabControl=c1;
+							c2.nextTabControl=c3;
+							c3.prevTabControl=c2;
+							c3.nextTabControl=c4;
+							c4.prevTabControl=c3;
+							c4.nextTabControl=c5;
+							c5.prevTabControl=c4;
+							c5.nextTabControl=c6;
+							c6.prevTabControl=c5
+							c6.nextTabControl=c7;
+							c7.prevTabControl=c6;
+							c7.nextTabControl=b1;
+							b1.prevTabControl=c7;
+							b1.nextTabControl=c1;
+							
+							// 각 종 액션들 설정
+							c1.valueChanged=function():void {
+								result=v1.validate(t1.text);
+								
+								if (hasValidationError(result)) {
+									c1.errorString=result.message;
+								} else {
+									c1.errorString=null;
+								}
+							};
+							
+							c2.valueChanged=function():void {
+								result=v2.validate(t2.text);
+								
+								if (hasValidationError(result)) {
+									c2.errorString=result.message;
+								} else {
+									c2.errorString=null;
+								}
+							};
+							
+							c3.valueChanged=function():void {
+								result=v3.validate(t3.text);
+								
+								if (hasValidationError(result)) {
+									c3.errorString=result.message;
+								} else {
+									c3.errorString=null;
+								}
+							};
+							
+							c3.listenFormControl(c1);
+							c3.listenFormControl(c2);
+							c3.controlsChanged=function():void {
+								c3.enabled=FormControlState.checkState(FormControlState.NORMAL, c1,
+																	   c2) && !hasValidationError(v1.validate(t1.text)) && !hasValidationError(v2.validate(t2.text));
+							};
+							
+							c4.valueChanged=function():void {
+								result=v4.validate(t4.text);
+								
+								if (hasValidationError(result)) {
+									c4.errorString=result.message;
+								} else {
+									c4.errorString=null;
+								}
+							};
+							
+							c4.listenFormControl(c3);
+							c4.controlsChanged=function():void {
+								c4.enabled=FormControlState.checkState(FormControlState.NORMAL,
+																	   c3) && !hasValidationError(v3.validate(c3.textInput.text));
+							};
+							
+							c5.stateChanged=function():void {
+								if (c5.state === FormControlState.NORMAL && c5.dropDownList.dataProvider === null) {
+									var list:IList=new ArrayList;
+									list.addItem("a");
+									list.addItem("b");
+									list.addItem("c");
+									list.addItem("d");
+									c5.dropDownList.dataProvider=list;
+								}
+							};
+							
+							c5.listenFormControl(c4);
+							c5.controlsChanged=function():void {
+								c5.enabled=FormControlState.checkState(FormControlState.NORMAL,
+																	   c4) && !hasValidationError(v4.validate(t4.text));
+							};
+							
+							c6.stateChanged=function():void {
+								if (c6.state === FormControlState.NORMAL && c6.comboBox.dataProvider === null) {
+									var list:IList=new ArrayList;
+									list.addItem("a");
+									list.addItem("b");
+									list.addItem("c");
+									list.addItem("d");
+									c6.comboBox.dataProvider=list;
+								}
+							};
+							
+							c6.listenFormControl(c4);
+							c6.controlsChanged=function():void {
+								c6.enabled=FormControlState.checkState(FormControlState.NORMAL,
+																	   c4) && !hasValidationError(v4.validate(t4.text));
+							};
+							
+							c7.listenFormControl(c5);
+							c7.listenFormControl(c6);
+							c7.controlsChanged=function():void {
+								c7.enabled=FormControlState.checkState(FormControlState.NORMAL, c5,
+																	   c6) && c5.dropDownList.selectedItem === "b";
+							};
+							
+							b1.listenFormControl(c6);
+							b1.listenFormControl(c7);
+							b1.controlsChanged=function():void {
+								b1.enabled=FormControlState.checkState(FormControlState.NORMAL, c6, c7) && c6.comboBox.selectedItem === "b";
+							};
+							
+							//---------------------------------------
+							// connect label
+							//---------------------------------------
+							label1.formControl=c1;
+							label2.formControl=c2;
+							label3.formControl=c3;
+							label4.formControl=c4;
+							label5.formControl=c5;
+							label6.formControl=c6;
+							label7.formControl=c7;
+							
+							startAndStopToggle();
+						}
+						
+						private function startAndStopToggle():void {
+							if (c1.state === FormControlState.NONE) {
+								// activate
+								c1.start();
+								c2.start();
+								c3.start();
+								c4.start();
+								c5.start();
+								c6.start();
+								c7.start();
+								b1.start();
+							} else {
+								// deactivate
+								c1.stop();
+								c2.stop();
+								c3.stop();
+								c4.stop();
+								c5.stop();
+								c6.stop();
+								c7.stop();
+								b1.stop();
+							}
+						}
+						
+						private function doSubmit():void {
+							trace(t1.text, t2.text, t3.text, t4.text, t5.selectedItem, t6.selectedItem, t7.value);
+						}
+						
+						private function hasValidationError(result:ValidationResultEvent):Boolean {
+							return result.results !== null;
+						}
+					]]>
+				</fx:Script>
+
+				<s:layout>
+					<s:VerticalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" gap="10" horizontalAlign="left"
+									  verticalAlign="top"/>
+				</s:layout>
+
+				<s:Group id="ttt">
+					<s:layout>
+						<s:VerticalLayout paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" gap="10" horizontalAlign="left"
+										  verticalAlign="top"/>
+					</s:layout>
+
+					<form:FormControlLabel id="label1" required="true" data="text input 1" skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:TextInput id="t1"/>
+					<form:FormControlLabel id="label2" required="false" data="text input 2" skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:TextInput id="t2"/>
+					<form:FormControlLabel id="label3" required="true" data="text input 3" skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:TextInput id="t3"/>
+					<form:FormControlLabel id="label4" required="false" data="text input 4" skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:TextInput id="t4"/>
+					<form:FormControlLabel id="label5" required="false" data="drop down list"
+										   skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:DropDownList id="t5"/>
+					<form:FormControlLabel id="label6" required="false" data="combo box" skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:ComboBox id="t6"/>
+					<form:FormControlLabel id="label7" required="true" data="numeric stepper"
+										   skinClass="ssen.displaykit.form.FormControlLabelSkin"/>
+					<s:NumericStepper id="t7"/>
+
+				</s:Group>
+				<s:Group>
+					<s:layout>
+						<s:HorizontalLayout paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" gap="5" horizontalAlign="left"
+											verticalAlign="top"/>
+					</s:layout>
+
+					<s:Button label="Submit" id="submit" click="doSubmit()" buttonMode="true"/>
+					<s:Button label="Toggle Start And Stop" click="startAndStopToggle()"/>
+					<s:Button label="Toggle Group Enabled" click="ttt.enabled = !ttt.enabled"/>
+				</s:Group>
+			</s:Group>
+		</fx:Component>
+	</fx:Declarations>
+
+</devkit:ExampleCanvas>

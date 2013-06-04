@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="utf-8"?>
+<devkit:ExampleCanvas xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:devkit="ssen.devkit.*"
+					  xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			[Test]
+			public function chartStyler():void {
+				clear();
+				
+				var g:ChartStyler=new ChartStyler;
+				addElement(g);
+			}
+			
+			[Test]
+			public function axisControl():void {
+				clear();
+				
+				var g:AxisControl=new AxisControl;
+				addElement(g);
+			}
+			
+			[Test]
+			public function chartAndDataTypes():void {
+				clear();
+				
+				var g:ChartAndDataTypes=new ChartAndDataTypes;
+				addElement(g);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		
+		<fx:Component className="ChartAndDataTypes">
+			<s:Scroller left="30" right="30" top="50" bottom="60">
+				<s:Group>
+					<fx:Script>
+						<![CDATA[
+							import mx.charts.HitData;
+							import mx.collections.ArrayCollection;
+							[Bindable]
+							private var data:ArrayCollection=new ArrayCollection([{Category: "Category1", Time: "Time1", Data1: 820,
+																				   Data2: 650, Data3: 450, Data4: 400},
+																				   {Category: "Category2", Time: "Time2", Data1: 330,
+																					Data2: 430, Data3: 600, Data4: 460},
+																				   {Category: "Category3", Time: "Time3", Data1: 700,
+																					Data2: 600, Data3: 350, Data4: 200},
+																				   {Category: "Category4", Time: "Time4", Data1: 80,
+																					Data2: 190, Data3: 990, Data4: 300},
+																				   {Category: "Category5", Time: "Time5", Data1: 240,
+																					Data2: 280, Data3: 500, Data4: 340}]);
+							
+							private function bubbleChartTip(hitData:HitData):String {
+								var item:Object=hitData.item;
+								return item["Category"] + "\n\nData1 : " + item["Data1"] + "\nData2 : " + item["Data2"] + "\nData3 : " + item["Data3"];
+							}
+							
+							private function plotChartTip(hitData:HitData):String {
+								var item:Object=hitData.item;
+								var series:PlotSeries=hitData.element as PlotSeries;
+								return series.xField + " / " + series.yField + "\n\nCategory : " + item["Category"] + "\n" + series.xField + " : " + item[series.xField] + "\n" + series.yField + " : " + item[series.yField];
+							}
+							
+							private function pieChartTip(hitData:HitData):String {
+								var item:Object=hitData.item;
+								var series:PieSeries=hitData.element as PieSeries;
+								return item["Category"] + "\n\n" + series.field + " : " + item[series.field];
+							}
+						]]>
+					</fx:Script>
+
+					<s:layout>
+						<s:HorizontalLayout paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20" gap="15"
+											horizontalAlign="left" verticalAlign="top"/>
+
+					</s:layout>
+
+					<s:Panel title="Area Chart Example" width="600" height="100%">
+						<mx:AreaChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Time"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:AreaSeries yField="Data3" form="curve" displayName="Data3"/>
+								<mx:AreaSeries yField="Data4" form="curve" displayName="Data4"/>
+								<mx:AreaSeries yField="Data1" form="curve" displayName="Data1"/>
+								<mx:AreaSeries yField="Data2" form="curve" displayName="Data2"/>
+							</mx:series>
+						</mx:AreaChart>
+					</s:Panel>
+
+					<s:Panel title="Line Chart Example" width="600" height="100%">
+						<mx:LineChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Time"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1"/>
+								<mx:LineSeries yField="Data2" form="segment" displayName="Data2"/>
+								<mx:LineSeries yField="Data3" form="segment" displayName="Data3"/>
+								<mx:LineSeries yField="Data4" form="segment" displayName="Data4"/>
+							</mx:series>
+						</mx:LineChart>
+					</s:Panel>
+
+					<s:Panel title="Bubble Chart Example" width="600" height="100%">
+						<mx:BubbleChart showDataTips="true" dataProvider="{data}" width="100%" height="100%"
+										dataTipFunction="bubbleChartTip">
+							<mx:series>
+								<mx:BubbleSeries xField="Data1" yField="Data2" radiusField="Data3"/>
+							</mx:series>
+						</mx:BubbleChart>
+					</s:Panel>
+
+					<s:Panel title="Bar Chart Example" width="600" height="100%">
+						<mx:BarChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:verticalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:verticalAxis>
+
+							<mx:series>
+								<mx:BarSeries yField="Category" xField="Data1" displayName="Data1"/>
+								<mx:BarSeries yField="Category" xField="Data2" displayName="Data2"/>
+								<mx:BarSeries yField="Category" xField="Data3" displayName="Data3"/>
+								<mx:BarSeries yField="Category" xField="Data4" displayName="Data4"/>
+							</mx:series>
+						</mx:BarChart>
+					</s:Panel>
+
+					<s:Panel title="Column Chart Example" width="600" height="100%">
+						<mx:ColumnChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:ColumnSeries xField="Category" yField="Data1" displayName="Data1"/>
+								<mx:ColumnSeries xField="Category" yField="Data2" displayName="Data2"/>
+								<mx:ColumnSeries xField="Category" yField="Data3" displayName="Data3"/>
+								<mx:ColumnSeries xField="Category" yField="Data4" displayName="Data4"/>
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+
+					<s:Panel title="Pie Chart Example" width="600" height="100%">
+						<mx:PieChart showDataTips="true" dataProvider="{data}" width="100%" height="100%" dataTipFunction="pieChartTip">
+							<mx:series>
+								<mx:PieSeries field="Data1"/>
+							</mx:series>
+						</mx:PieChart>
+					</s:Panel>
+
+					<s:Panel title="Plot Chart Example" width="600" height="100%">
+						<mx:PlotChart showDataTips="true" dataProvider="{data}" width="100%" height="100%" dataTipFunction="plotChartTip">
+							<mx:series>
+								<mx:PlotSeries xField="Data1" yField="Data2" displayName="Data1 / Data2"/>
+								<mx:PlotSeries xField="Data2" yField="Data3" displayName="Data2 / Data3"/>
+								<mx:PlotSeries xField="Data3" yField="Data4" displayName="Data3 / Data4"/>
+							</mx:series>
+						</mx:PlotChart>
+					</s:Panel>
+
+					<s:Panel title="Candlestick Chart Example" width="600" height="100%">
+						<mx:CandlestickChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:CandlestickSeries openField="Data2" highField="Data1" closeField="Data4" lowField="Data3"/>
+							</mx:series>
+						</mx:CandlestickChart>
+					</s:Panel>
+
+					<s:Panel title="Line And Column Chart Example" width="600" height="100%">
+						<mx:ColumnChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:AreaSeries yField="Data4" form="curve" displayName="Data4"/>
+								<mx:ColumnSeries xField="Category" yField="Data2" displayName="Data2"/>
+								<mx:ColumnSeries xField="Category" yField="Data3" displayName="Data3"/>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1"/>
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+
+					<s:Panel title="Bubble And Plot Chart Example" width="600" height="100%">
+						<mx:BubbleChart showDataTips="true" dataProvider="{data}" width="100%" height="100%"
+										dataTipFunction="bubbleChartTip">
+							<mx:series>
+								<mx:BubbleSeries xField="Data1" yField="Data2" radiusField="Data3"/>
+								<mx:PlotSeries xField="Data3" yField="Data4" displayName="Data3 / Data4"/>
+								<mx:PlotSeries xField="Data4" yField="Data1" displayName="Data4 / Data1"/>
+							</mx:series>
+						</mx:BubbleChart>
+					</s:Panel>
+
+					<s:Panel title="Line And Candlestick Chart Example" width="600" height="100%">
+						<mx:CandlestickChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:CandlestickSeries openField="Data2" highField="Data1" closeField="Data4" lowField="Data3"/>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1"/>
+							</mx:series>
+						</mx:CandlestickChart>
+					</s:Panel>
+
+					<s:Panel title="Complex Bar Chart Example" width="600" height="100%">
+						<mx:BarChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:verticalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:verticalAxis>
+
+							<mx:series>
+								<mx:BarSet type="clustered">
+									<mx:BarSeries yField="Category" xField="Data1" displayName="Data1"/>
+									<mx:BarSet type="stacked">
+										<mx:BarSeries yField="Category" xField="Data2" displayName="Data2"/>
+										<mx:BarSeries yField="Category" xField="Data3" displayName="Data3"/>
+										<mx:BarSeries yField="Category" xField="Data4" displayName="Data4"/>
+									</mx:BarSet>
+								</mx:BarSet>
+							</mx:series>
+						</mx:BarChart>
+					</s:Panel>
+
+					<s:Panel title="Complex Column Chart Example" width="600" height="100%">
+						<mx:ColumnChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:series>
+								<mx:ColumnSet type="clustered">
+									<mx:ColumnSet type="stacked">
+										<mx:ColumnSeries xField="Category" yField="Data1" displayName="Data1"/>
+										<mx:ColumnSeries xField="Category" yField="Data2" displayName="Data2"/>
+									</mx:ColumnSet>
+									<mx:ColumnSeries xField="Category" yField="Data3" displayName="Data3"/>
+									<mx:ColumnSeries xField="Category" yField="Data4" displayName="Data4"/>
+								</mx:ColumnSet>
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+				</s:Group>
+			</s:Scroller>
+		</fx:Component>
+
+		
+		
+		
+		
+		
+		
+		
+		<fx:Component className="AxisControl">
+			<s:Scroller left="30" right="30" top="50" bottom="60">
+				<s:Group>
+					<fx:Script>
+						<![CDATA[
+							import mx.collections.ArrayCollection;
+							[Bindable]
+							private var data:ArrayCollection=new ArrayCollection([{Category: "Category1", Time: "Time1", Data1: 820,
+																				   Data2: 650, Data3: 820, Data4: 400},
+																				   {Category: "Category2", Time: "Time2", Data1: 330,
+																					Data2: 430, Data3: 600, Data4: 460},
+																				   {Category: "Category3", Time: "Time3", Data1: 700,
+																					Data2: 600, Data3: 350, Data4: 200},
+																				   {Category: "Category4", Time: "Time4", Data1: 80,
+																					Data2: 190, Data3: 990, Data4: 300},
+																				   {Category: "Category5", Time: "Time5", Data1: 240,
+																					Data2: 280, Data3: 500, Data4: 340}]);
+						]]>
+					</fx:Script>
+
+					<s:layout>
+						<s:HorizontalLayout paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20" gap="15"
+											horizontalAlign="left" verticalAlign="top"/>
+					</s:layout>
+
+					<s:Panel title="Candlestick Chart Example" width="600" height="100%">
+						<mx:CandlestickChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxisRenderers>
+								<mx:AxisRenderer axis="{cshaxis}" canDropLabels="true"/>
+							</mx:horizontalAxisRenderers>
+
+							<mx:series>
+								<mx:CandlestickSeries openField="Data2" highField="Data1" closeField="Data4" lowField="Data3">
+									<mx:horizontalAxis>
+										<mx:CategoryAxis id="cshaxis" categoryField="Category"/>
+									</mx:horizontalAxis>
+								</mx:CandlestickSeries>
+							</mx:series>
+						</mx:CandlestickChart>
+					</s:Panel>
+
+					<s:Panel title="Bubble Axis Control Example" width="600" height="100%">
+						<mx:BubbleChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:LinearAxis minimum="-200" maximum="1000"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxis>
+								<mx:LinearAxis minimum="-200" maximum="1000"/>
+							</mx:verticalAxis>
+
+							<mx:series>
+								<mx:BubbleSeries xField="Data1" yField="Data2" radiusField="Data3"/>
+							</mx:series>
+						</mx:BubbleChart>
+					</s:Panel>
+
+					<s:Panel title="Line Chart Example" width="600" height="100%">
+						<mx:LineChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis id="linechartxaxis" categoryField="Time"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxis>
+								<mx:LinearAxis id="linechartvaxis"/>
+							</mx:verticalAxis>
+
+							<mx:horizontalAxisRenderers>
+								<mx:AxisRenderer placement="top" axis="{linechartxaxis}"/>
+							</mx:horizontalAxisRenderers>
+
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer placement="right" axis="{linechartvaxis}"/>
+							</mx:verticalAxisRenderers>
+
+							<mx:series>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1"/>
+							</mx:series>
+						</mx:LineChart>
+					</s:Panel>
+
+					<s:Panel title="Axis Renderer Example" width="600" height="100%">
+						<mx:ColumnChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer placement="left" axis="{lvax1}"/>
+							</mx:verticalAxisRenderers>
+
+							<mx:series>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1">
+									<mx:verticalAxis>
+										<mx:LinearAxis id="lvax1" minimum="0" maximum="800"/>
+									</mx:verticalAxis>
+								</mx:LineSeries>
+								<!--<mx:ColumnSeries xField="Category" yField="Data1" displayName="Data1">
+								<mx:verticalAxis>
+								<mx:LinearAxis id="lvax1" minimum="100" maximum="800"/>
+								</mx:verticalAxis>
+								</mx:ColumnSeries>-->
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+
+					<!--
+					주의가 필요한 기술이다.
+
+					좌우 Axis 의 수치가 다르기 때문에 같은 값 (좌측의 800 과 우측의 800) 이 다른 지점을 가르킬 수 있다
+					서로 다른 수를 가르키는 것은 혼란을 주게 될 소지가 높다.
+
+					데이터들을 서로 수치 연동이 되는 (좌측은 실제 데이터 수치, 우측은 퍼센티지 수치) 형태로 지정하거나,
+					혹은 Axis 수치를 컨트롤 해서 컬럼차트에서 좀 떨어진 상단에 라인차트를 놓는다거나 (컬럼차트는 순수익, 라인차트는 총 자산) 식으로
+					컨트롤 해야 차트의 의미를 살릴 수 있다
+					-->
+					<s:Panel title="Multiple Axes Example" width="600" height="100%">
+						<mx:ColumnChart showDataTips="true" dataProvider="{data}" width="100%" height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer placement="left" axis="{lvax}"/>
+								<mx:AxisRenderer placement="right" axis="{rvax}"/>
+							</mx:verticalAxisRenderers>
+
+							<mx:series>
+								<mx:ColumnSeries xField="Category" yField="Data3" displayName="Data3">
+									<mx:verticalAxis>
+										<mx:LinearAxis id="lvax"/>
+									</mx:verticalAxis>
+								</mx:ColumnSeries>
+								<mx:LineSeries yField="Data1" form="segment" displayName="Data1">
+									<mx:verticalAxis>
+										<mx:LinearAxis id="rvax"/>
+									</mx:verticalAxis>
+								</mx:LineSeries>
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+
+				</s:Group>
+			</s:Scroller>
+		</fx:Component>
+
+		
+		
+		
+		
+		<!-- 
+		Bar Chart 의 여러 속성들을 조절해보면서
+		속성들이 모양에 미치는 영향들을 확인해볼 수 있다
+		-->
+		<fx:Component className="ChartStyler">
+			<s:Group left="30" right="30" top="50" bottom="50">
+				<s:states>
+					<s:State name="bar"/>
+					<s:State name="column"/>
+				</s:states>
+
+				<fx:Script>
+					<![CDATA[
+						import mx.collections.ArrayCollection;
+						
+						[Bindable]
+						private var data:ArrayCollection=new ArrayCollection([{Category: "Category1", Time: "Time1", Data1: 820, Data2: 650,
+																			   Data3: 450, Data4: 400},
+																			   {Category: "Category2", Time: "Time2", Data1: 330,
+																				Data2: 430, Data3: 600, Data4: 460},
+																			   {Category: "Category3", Time: "Time3", Data1: 700,
+																				Data2: 600, Data3: 350, Data4: 200},
+																			   {Category: "Category4", Time: "Time4", Data1: 80, Data2: 190,
+																				Data3: 990, Data4: 300},
+																			   {Category: "Category5", Time: "Time5", Data1: 240,
+																				Data2: 280, Data3: 500, Data4: 340}]);
+					]]>
+				</fx:Script>
+
+
+				<s:Group width="100%" height="100%">
+					<s:layout>
+						<s:HorizontalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" gap="10"
+											horizontalAlign="left" verticalAlign="top"/>
+					</s:layout>
+
+					<s:Panel title="Chart" width="100%" height="400">
+
+						<mx:BarChart includeIn="bar" id="barchart" type="{type.selectedItem}" showDataTips="{showDataTips.selected}"
+									 showAllDataTips="{showAllDataTips.selected}" paddingLeft="{paddingLeft.value}"
+									 paddingRight="{paddingRight.value}" paddingBottom="{paddingBottom.value}"
+									 paddingTop="{paddingTop.value}" gutterLeft="{gutterLeft.value}" gutterRight="{gutterRight.value}"
+									 gutterBottom="{gutterBottom.value}" gutterTop="{gutterTop.value}" dataProvider="{data}" width="100%"
+									 height="100%">
+
+							<mx:horizontalAxis>
+								<mx:LinearAxis id="barchartHaxis"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxis>
+								<mx:CategoryAxis id="barchartVaxis" categoryField="Category"/>
+							</mx:verticalAxis>
+
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer axis="{barchartVaxis}" labelGap="{verticalAxisLabelGap.value}"
+												 labelAlign="{verticalAxisLabelAlign.selectedItem}" showLine="true">
+									<mx:axisStroke>
+										<s:SolidColorStroke weight="10" color="0x000000" caps="square"/>
+									</mx:axisStroke>
+								</mx:AxisRenderer>
+							</mx:verticalAxisRenderers>
+
+							<mx:horizontalAxisRenderers>
+								<mx:AxisRenderer axis="{barchartHaxis}" labelGap="{horizontalAxisLabelGap.value}"
+												 labelAlign="{horizontalAxisLabelAlign.selectedItem}"/>
+							</mx:horizontalAxisRenderers>
+
+							<mx:series>
+								<mx:BarSeries yField="Category" xField="Data1" displayName="Data1">
+									<mx:fill>
+										<s:LinearGradient>
+											<s:GradientEntry color="0xffffff"/>
+											<s:GradientEntry color="0x000000"/>
+										</s:LinearGradient>
+									</mx:fill>
+								</mx:BarSeries>
+								<mx:BarSeries yField="Category" xField="Data2" displayName="Data2"/>
+								<mx:BarSeries yField="Category" xField="Data3" displayName="Data3"/>
+								<mx:BarSeries yField="Category" xField="Data4" displayName="Data4"/>
+							</mx:series>
+						</mx:BarChart>
+
+						<mx:ColumnChart includeIn="column" id="columnchart" type="{type.selectedItem}"
+										showDataTips="{showDataTips.selected}" showAllDataTips="{showAllDataTips.selected}"
+										paddingLeft="{paddingLeft.value}" paddingRight="{paddingRight.value}"
+										paddingBottom="{paddingBottom.value}" paddingTop="{paddingTop.value}"
+										gutterLeft="{gutterLeft.value}" gutterRight="{gutterRight.value}"
+										gutterBottom="{gutterBottom.value}" gutterTop="{gutterTop.value}" dataProvider="{data}" width="100%"
+										height="100%">
+
+							<mx:horizontalAxis>
+								<mx:CategoryAxis id="columnchartHaxis" categoryField="Category"/>
+							</mx:horizontalAxis>
+
+							<mx:verticalAxis>
+								<mx:LinearAxis id="columnchartVaxis"/>
+							</mx:verticalAxis>
+
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer axis="{columnchartVaxis}" labelGap="{verticalAxisLabelGap.value}"
+												 labelAlign="{verticalAxisLabelAlign.selectedItem}"/>
+							</mx:verticalAxisRenderers>
+
+							<mx:horizontalAxisRenderers>
+								<mx:AxisRenderer axis="{columnchartHaxis}" labelGap="{horizontalAxisLabelGap.value}"
+												 labelAlign="{horizontalAxisLabelAlign.selectedItem}"/>
+							</mx:horizontalAxisRenderers>
+
+							<mx:series>
+								<mx:ColumnSeries xField="Category" yField="Data1" displayName="Data1"/>
+								<mx:ColumnSeries xField="Category" yField="Data2" displayName="Data2"/>
+								<mx:ColumnSeries xField="Category" yField="Data3" displayName="Data3"/>
+								<mx:ColumnSeries xField="Category" yField="Data4" displayName="Data4"/>
+							</mx:series>
+						</mx:ColumnChart>
+					</s:Panel>
+
+					<s:Form>
+						<s:FormItem label="select chart">
+							<s:DropDownList id="stateSelector" change="currentState=stateSelector.selectedItem" selectedIndex="0">
+								<s:dataProvider>
+									<s:ArrayList>
+										<fx:String>bar</fx:String>
+										<fx:String>column</fx:String>
+									</s:ArrayList>
+								</s:dataProvider>
+							</s:DropDownList>
+						</s:FormItem>
+						<s:FormItem label="legend">
+							<mx:Legend direction="horizontal" dataProvider.bar="{barchart}" dataProvider.column="{columnchart}"/>
+						</s:FormItem>
+						<s:FormItem label="showDataTips">
+							<s:CheckBox id="showDataTips"/>
+						</s:FormItem>
+						<s:FormItem label="showAllDataTips">
+							<s:CheckBox id="showAllDataTips"/>
+						</s:FormItem>
+						<s:FormItem label="type">
+							<s:DropDownList id="type" selectedIndex="0">
+								<s:dataProvider>
+									<s:ArrayList>
+										<fx:String>clustered</fx:String>
+										<fx:String>stacked</fx:String>
+										<fx:String>100%</fx:String>
+										<fx:String>overlaid</fx:String>
+									</s:ArrayList>
+								</s:dataProvider>
+							</s:DropDownList>
+						</s:FormItem>
+						<s:FormItem label="padding TRBL">
+							<s:HGroup>
+								<s:NumericStepper id="paddingTop" minimum="0" maximum="50"/>
+								<s:NumericStepper id="paddingRight" minimum="0" maximum="50"/>
+								<s:NumericStepper id="paddingBottom" minimum="0" maximum="50"/>
+								<s:NumericStepper id="paddingLeft" minimum="0" maximum="50"/>
+							</s:HGroup>
+						</s:FormItem>
+						<s:FormItem label="gutter TRBL">
+							<s:HGroup>
+								<s:NumericStepper id="gutterTop" minimum="0" maximum="80" value="10"/>
+								<s:NumericStepper id="gutterRight" minimum="0" maximum="80" value="10"/>
+								<s:NumericStepper id="gutterBottom" minimum="0" maximum="80" value="50"/>
+								<s:NumericStepper id="gutterLeft" minimum="0" maximum="80" value="80"/>
+							</s:HGroup>
+						</s:FormItem>
+						<s:FormItem label="axis label gap VH">
+							<s:HGroup>
+								<s:NumericStepper id="verticalAxisLabelGap" minimum="0" maximum="80" value="10"/>
+								<s:NumericStepper id="horizontalAxisLabelGap" minimum="0" maximum="80" value="10"/>
+							</s:HGroup>
+						</s:FormItem>
+						<s:FormItem label="axis label align VH">
+							<s:HGroup>
+								<s:DropDownList id="verticalAxisLabelAlign" selectedIndex="0">
+									<s:dataProvider>
+										<s:ArrayList>
+											<fx:String>top</fx:String>
+											<fx:String>middle</fx:String>
+											<fx:String>bottom</fx:String>
+										</s:ArrayList>
+									</s:dataProvider>
+								</s:DropDownList>
+								<s:DropDownList id="horizontalAxisLabelAlign" selectedIndex="0">
+									<s:dataProvider>
+										<s:ArrayList>
+											<fx:String>left</fx:String>
+											<fx:String>center</fx:String>
+											<fx:String>right</fx:String>
+										</s:ArrayList>
+									</s:dataProvider>
+								</s:DropDownList>
+							</s:HGroup>
+						</s:FormItem>
+					</s:Form>
+				</s:Group>
+			</s:Group>
+		</fx:Component>
+	</fx:Declarations>
+</devkit:ExampleCanvas>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<devkit:ExampleCanvas xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:devkit="ssen.devkit.*"
+					  xmlns:layouts="ssen.displaykit.layouts.*">
+	<fx:Script>
+		<![CDATA[
+			import spark.components.Button;
+			import spark.components.Group;
+			import spark.layouts.HorizontalAlign;
+			import spark.layouts.VerticalAlign;
+			
+			import ssen.common.MathUtils;
+			
+			[Test]
+			public function testFlowLayout():void {
+				clear();
+				
+				const W:int=500;
+				const H:int=400;
+				
+				var g:Graphics=canvas.graphics;
+				g.beginFill(0x777777);
+				g.drawRect(10, 10, W, H);
+				g.endFill();
+				
+				var layout:FlowLayout=new FlowLayout;
+				layout.horizontalGap=10;
+				layout.verticalGap=10;
+				layout.horizontalAlign=HorizontalAlign.LEFT;
+				layout.itemVerticalAlign=VerticalAlign.TOP;
+				layout.paddingLeft=30;
+				layout.paddingRight=0;
+				layout.paddingTop=30;
+				layout.paddingBottom=0;
+				
+				var group:Group=new Group;
+				group.width=W;
+				group.height=H;
+				group.x=20;
+				group.y=20;
+				group.layout=layout;
+				
+				var btn:Button;
+				var f:int=MathUtils.rand(3, 40);
+				while (--f >= 0) {
+					btn=new Button;
+					btn.label=f.toString();
+					btn.width=MathUtils.rand(20, 100);
+					btn.height=MathUtils.rand(20, 40);
+					group.addElement(btn);
+				}
+				
+				addElement(group);
+			}
+			
+			[Test]
+			public function testFlowLayoutWithInvalidation():void {
+				clear();
+				
+				const W:int=500;
+				const H:int=400;
+				
+				var g:Graphics=canvas.graphics;
+				g.beginFill(0x777777);
+				g.drawRect(10, 10, W, H);
+				g.endFill();
+				
+				var layout:FlowLayout=new FlowLayout;
+				layout.horizontalGap=10;
+				layout.verticalGap=10;
+				layout.horizontalAlign=HorizontalAlign.LEFT;
+				layout.itemVerticalAlign=VerticalAlign.TOP;
+				
+				var group:Group=new Group;
+				group.width=W;
+				group.height=H;
+				group.x=20;
+				group.y=20;
+				group.layout=layout;
+				
+				var btn:Button;
+				var f:int=MathUtils.rand(3, 40);
+				while (--f >= 0) {
+					btn=new Button;
+					// 이와 같이 measure 시점 이후에 size 가 결정되는 경우
+					// size 가 부정확해서 정렬 범위가 이상하게 작동하는 경우가 있다.
+					btn.label=MathUtils.randHex(MathUtils.rand(2, 12));
+					group.addElement(btn);
+				}
+				
+				addElement(group);
+				
+				// 이 경우에는 size 가 결정된 이후 시점에
+				// 다시 한 번 지연 호출을 통해 invalidation 시켜주면 뭔가 된다...
+				callLater(group.invalidateDisplayList);
+			}
+			
+			[Test]
+			public function testOptions():void {
+				clear();
+				
+				var ot:OptionTester=new OptionTester;
+				addElement(ot);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component className="OptionTester">
+			<s:Group initialize="application1_initializeHandler(event)" left="30" right="30" top="50" bottom="50">
+				<fx:Script>
+					<![CDATA[
+						import mx.collections.ArrayList;
+						import mx.events.FlexEvent;
+						
+						import ssen.common.MathUtils;
+						
+						protected function list1_keyUpHandler(event:KeyboardEvent):void {
+							if (event.keyCode === Keyboard.SPACE) {
+								trace("flowTest.list1_keyUpHandler", event);
+							}
+						}
+						
+						protected function application1_initializeHandler(event:FlexEvent):void {
+							var list:ArrayList=new ArrayList;
+							var f:int=MathUtils.rand(20, 100);
+							
+							while (--f >= 0) {
+								list.addItem(MathUtils.rand(0, 255).toString(16));
+							}
+							
+							list1.dataProvider=list;
+						}
+					]]>
+				</fx:Script>
+
+				<!-- The Application layout -->
+				<s:layout>
+					<s:HorizontalLayout/>
+				</s:layout>
+
+				<!-- A Spark List -->
+				<s:Group width="100%" height="100%">
+					<s:layout>
+						<s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
+					</s:layout>
+					<s:List id="list1" width="{widthSlider.value}" height="{heightSlider.value}" keyUp="list1_keyUpHandler(event)">
+						<s:layout>
+							<layouts:FlowLayout horizontalAlign="{horizontalAlign.selectedItem}"
+												itemVerticalAlign="{verticalAlign.selectedItem}" horizontalGap="{hgapSlider.value}"
+												verticalGap="{vgapSlider.value}" paddingLeft="{paddingLeftSlider.value}"
+												paddingRight="{paddingRightSlider.value}" paddingTop="{paddingTopSlider.value}"
+												paddingBottom="{paddingBottomSlider.value}"/>
+						</s:layout>
+					</s:List>
+				</s:Group>
+
+				<s:Group height="100%">
+					<s:layout>
+						<s:VerticalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" gap="5"
+										  horizontalAlign="center" verticalAlign="middle"/>
+
+					</s:layout>
+					<s:Label text="horizontal align"/>
+					<s:DropDownList id="horizontalAlign" selectedIndex="0">
+						<s:dataProvider>
+							<s:ArrayList>
+								<fx:String>left</fx:String>
+								<fx:String>center</fx:String>
+								<fx:String>right</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:DropDownList>
+					<s:Label text="vertical align"/>
+					<s:DropDownList id="verticalAlign" selectedIndex="0">
+						<s:dataProvider>
+							<s:ArrayList>
+								<fx:String>top</fx:String>
+								<fx:String>middle</fx:String>
+								<fx:String>bottom</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:DropDownList>
+					<s:Label text="width"/>
+					<s:HSlider id="widthSlider" minimum="10" maximum="400" value="200" liveDragging="true"/>
+					<s:Label text="height"/>
+					<s:HSlider id="heightSlider" minimum="10" maximum="400" value="200" liveDragging="true"/>
+					<s:Label text="horizontal gap"/>
+					<s:HSlider id="hgapSlider" minimum="0" maximum="40" value="10" liveDragging="true"/>
+					<s:Label text="vertical gap"/>
+					<s:HSlider id="vgapSlider" minimum="0" maximum="40" value="10" liveDragging="true"/>
+					<s:Label text="padding left"/>
+					<s:HSlider id="paddingLeftSlider" minimum="0" maximum="50" value="10" liveDragging="true"/>
+					<s:Label text="padding right"/>
+					<s:HSlider id="paddingRightSlider" minimum="0" maximum="50" value="10" liveDragging="true"/>
+					<s:Label text="padding top"/>
+					<s:HSlider id="paddingTopSlider" minimum="0" maximum="50" value="10" liveDragging="true"/>
+					<s:Label text="padding bottom"/>
+					<s:HSlider id="paddingBottomSlider" minimum="0" maximum="50" value="10" liveDragging="true"/>
+				</s:Group>
+
+			</s:Group>
+		</fx:Component>
+	</fx:Declarations>
+
+</devkit:ExampleCanvas>

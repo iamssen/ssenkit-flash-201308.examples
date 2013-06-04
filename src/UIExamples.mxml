@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:graphics="ssen.displaykit.graphics.*"
+					   xmlns:devkit="ssen.devkit.*">
+	<devkit:ExampleCanvasViewer width="100%" height="100%">
+		<s:ArrayList>
+			<devkit:VisualElementFactory cls="ssen.displaykit.chart.Chart__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.MxmlGraphics__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.MathematicalGraphics__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.form.FormControl__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.layouts.FlowLayout__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.GraphicsDrawing__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.Easing__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.PointMaker__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.Gradation__Example"/>
+			<devkit:VisualElementFactory cls="ssen.displaykit.graphics.ColorMatrixFilter__Example"/>
+		</s:ArrayList>
+	</devkit:ExampleCanvasViewer>
+</s:WindowedApplication>
