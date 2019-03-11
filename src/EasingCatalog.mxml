@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:drawingkit="ssen.drawingkit.*" addedToStage="init(event)" frameRate="40">
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.easing.Back;
+			import com.greensock.easing.Bounce;
+			import com.greensock.easing.Circ;
+			import com.greensock.easing.Cubic;
+			import com.greensock.easing.Elastic;
+			import com.greensock.easing.Expo;
+			import com.greensock.easing.Linear;
+			import com.greensock.easing.Quad;
+			import com.greensock.easing.Quart;
+			import com.greensock.easing.Quint;
+			import com.greensock.easing.Sine;
+
+			private var boxes:Vector.<EasingBox>;
+
+			private function init(event:Event):void {
+				boxes=new Vector.<EasingBox>;
+				boxes.push(backEaseIn, backEaseInOut, backEaseOut);
+				boxes.push(bounceEaseIn, bounceEaseInOut, bounceEaseOut);
+				boxes.push(circEaseIn, circEaseInOut, circEaseOut);
+				boxes.push(cubicEaseIn, cubicEaseInOut, cubicEaseOut);
+				boxes.push(elasticEaseIn, elasticEaseInOut, elasticEaseOut);
+				boxes.push(expoEaseIn, expoEaseInOut, expoEaseOut);
+				boxes.push(quadEaseIn, quadEaseInOut, quadEaseOut);
+				boxes.push(quartEaseIn, quartEaseInOut, quartEaseOut);
+				boxes.push(quintEaseIn, quintEaseInOut, quintEaseOut);
+				boxes.push(sineEaseIn, sineEaseInOut, sineEaseOut);
+				boxes.push(linearEaseNone);
+
+				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			}
+
+			private function enterFrameHandler(event:Event):void {
+				var f:int=boxes.length;
+				while (--f >= 0) {
+					boxes[f].animationNext();
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="745" gap="50" top="20" horizontalCenter="0">
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="backEaseIn" ease="{Back.easeIn}" title="Back.easeIn"/>
+			<drawingkit:EasingBox id="backEaseInOut" ease="{Back.easeInOut}" title="Back.easeInOut"/>
+			<drawingkit:EasingBox id="backEaseOut" ease="{Back.easeOut}" title="Back.easeOut"/>
+			<drawingkit:EasingBox id="bounceEaseIn" ease="{Bounce.easeIn}" title="Bounce.easeIn"/>
+			<drawingkit:EasingBox id="bounceEaseInOut" ease="{Bounce.easeInOut}" title="Bounce.easeInOut"/>
+			<drawingkit:EasingBox id="bounceEaseOut" ease="{Bounce.easeOut}" title="Bounce.easeOut"/>
+		</s:HGroup>
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="circEaseIn" ease="{Circ.easeIn}" title="Circ.easeIn"/>
+			<drawingkit:EasingBox id="circEaseInOut" ease="{Circ.easeInOut}" title="Circ.easeInOut"/>
+			<drawingkit:EasingBox id="circEaseOut" ease="{Circ.easeOut}" title="Circ.easeOut"/>
+			<drawingkit:EasingBox id="cubicEaseIn" ease="{Cubic.easeIn}" title="Cubic.easeIn"/>
+			<drawingkit:EasingBox id="cubicEaseInOut" ease="{Cubic.easeInOut}" title="Cubic.easeInOut"/>
+			<drawingkit:EasingBox id="cubicEaseOut" ease="{Cubic.easeOut}" title="Cubic.easeOut"/>
+		</s:HGroup>
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="elasticEaseIn" ease="{Elastic.easeIn}" title="Elastic.easeIn"/>
+			<drawingkit:EasingBox id="elasticEaseInOut" ease="{Elastic.easeInOut}" title="Elastic.easeInOut"/>
+			<drawingkit:EasingBox id="elasticEaseOut" ease="{Elastic.easeOut}" title="Elastic.easeOut"/>
+			<drawingkit:EasingBox id="expoEaseIn" ease="{Expo.easeIn}" title="Expo.easeIn"/>
+			<drawingkit:EasingBox id="expoEaseInOut" ease="{Expo.easeInOut}" title="Expo.easeInOut"/>
+			<drawingkit:EasingBox id="expoEaseOut" ease="{Expo.easeOut}" title="Expo.easeOut"/>
+		</s:HGroup>
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="quadEaseIn" ease="{Quad.easeIn}" title="Quad.easeIn"/>
+			<drawingkit:EasingBox id="quadEaseInOut" ease="{Quad.easeInOut}" title="Quad.easeInOut"/>
+			<drawingkit:EasingBox id="quadEaseOut" ease="{Quad.easeOut}" title="Quad.easeOut"/>
+			<drawingkit:EasingBox id="quartEaseIn" ease="{Quart.easeIn}" title="Quart.easeIn"/>
+			<drawingkit:EasingBox id="quartEaseInOut" ease="{Quart.easeInOut}" title="Quart.easeInOut"/>
+			<drawingkit:EasingBox id="quartEaseOut" ease="{Quart.easeOut}" title="Quart.easeOut"/>
+		</s:HGroup>
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="quintEaseIn" ease="{Quint.easeIn}" title="Quint.easeIn"/>
+			<drawingkit:EasingBox id="quintEaseInOut" ease="{Quint.easeInOut}" title="Quint.easeInOut"/>
+			<drawingkit:EasingBox id="quintEaseOut" ease="{Quint.easeOut}" title="Quint.easeOut"/>
+			<drawingkit:EasingBox id="sineEaseIn" ease="{Sine.easeIn}" title="Sine.easeIn"/>
+			<drawingkit:EasingBox id="sineEaseInOut" ease="{Sine.easeInOut}" title="Sine.easeInOut"/>
+			<drawingkit:EasingBox id="sineEaseOut" ease="{Sine.easeOut}" title="Sine.easeOut"/>
+		</s:HGroup>
+		<s:HGroup gap="5">
+			<drawingkit:EasingBox id="linearEaseNone" ease="{Linear.easeNone}" title="Linear.easeNone"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Application>
